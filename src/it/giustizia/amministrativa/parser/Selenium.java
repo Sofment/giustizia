@@ -115,9 +115,7 @@ public class Selenium {
 
     private static void processedAllItems() {
         boolean isContinue = true;
-
         int currentLineIndex = 1;
-
         FileWriter fileWriter;
 
         while (isContinue) {
@@ -127,14 +125,14 @@ public class Selenium {
             if(table == null || !table.isDisplayed()) return;
 
             List<WebElement> webElements = table.findElements(By.className(Constants.ClassName.ROW));
-
+            i("Size:" + webElements);
             isContinue = false;
             for (WebElement child : webElements) {
                 if (!child.isDisplayed()) {
                     i("table row is not disabled");
                     Coordinates coordinates = ((Locatable) webElements.get(webElements.size() - 1)).getCoordinates();
                     coordinates.inViewPort();
-                    driver.sleep(1000);
+                    driver.sleep(2000);
                 }
 
                 List<WebElement> cells = child.findElements(By.className(Constants.ClassName.CELL));
@@ -171,7 +169,7 @@ public class Selenium {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            return;
+                            processingDialog();
                         }
                         break;
                     } else {
@@ -180,6 +178,18 @@ public class Selenium {
                 }
             }
         }
+    }
+
+    private static boolean processingDialog() {
+        timeouts.pageLoadTimeout(testParams.defaultTimeout, TimeUnit.MILLISECONDS);
+        WebElement webElement = driver.findElement(By.id("d1::msgDlg::cancel"));
+        if(webElement != null && webElement.isDisplayed()) {
+            i("Click on OK");
+            webElement.click();
+            return true;
+        }
+        i("Cannot find dialog");
+        return false;
     }
 
     private static boolean openDetails(String fileName) {
