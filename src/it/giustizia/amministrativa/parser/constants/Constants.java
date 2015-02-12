@@ -4,6 +4,8 @@ package it.giustizia.amministrativa.parser.constants;
  * Created by avsupport on 2/11/15.
  */
 public class Constants {
+    public static String CURRENT_TYPE = Type.TAR;
+
     public static class Url {
         public static final String TAR_MAIN_URL = "https://www.giustizia-amministrativa.it/cdsintra/cdsintra/Attivita/tarattivita/index.html";
         public static final String CS_MAIN_URL = "https://www.giustizia-amministrativa.it/cdsintra/cdsintra/index.html";
@@ -25,5 +27,10 @@ public class Constants {
     public static class ClassName {
         public static final String ROW = "x10m";
         public static final String CELL = "x10j";
+    }
+
+    public static class Type{
+        public static final String TAR = "tar";
+        public static final String CDS = "cds";
     }
 }

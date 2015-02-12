@@ -29,12 +29,11 @@ public class Selenium {
 
     public static void main(String[] args) {
         testParams = new TestParams(args);
-
         driver = new FirefoxDriverAddon();
-
         timeouts = driver.manage().timeouts();
+        Constants.CURRENT_TYPE = testParams.type;
 
-        if(testParams.type.equalsIgnoreCase("tar")) {
+        if(testParams.type.equalsIgnoreCase(Constants.Type.TAR)) {
             if(testParams.provinces.size() == 0) {
                 testParams.provinces.addAll(testParams.provincesHashMap.getArrayListOfAllKeys());
             }
@@ -125,7 +124,7 @@ public class Selenium {
             if(table == null || !table.isDisplayed()) return;
 
             List<WebElement> webElements = table.findElements(By.className(Constants.ClassName.ROW));
-            i("Size:" + webElements);
+            i("Size:" + webElements.size());
             isContinue = false;
             for (WebElement child : webElements) {
                 if (!child.isDisplayed()) {
@@ -137,9 +136,23 @@ public class Selenium {
 
                 List<WebElement> cells = child.findElements(By.className(Constants.ClassName.CELL));
                 String line = "";
-                for (WebElement currentCell : cells) {
+                String fileName = "";
+                for (int i = 0; i < cells.size(); i++) {
+                    WebElement currentCell = cells.get(i);
+//                    i("i="+i+"; text:" + currentCell.getText());
+                    if(Constants.CURRENT_TYPE.equals(Constants.Type.TAR) ||
+                            Constants.CURRENT_TYPE.equals(Constants.Type.CDS)) {
+                        if (i == 0 || i == 1 || i == 5) {
+                            try {
+                                fileName = fileName + (fileName.isEmpty() ? "" : "-") + currentCell.getText();
+                            }catch (Exception ex){
+                                ex.printStackTrace();
+                            }
+                        }
+                    }
                     line = line + currentCell.getText() + "      ";
                 }
+                i("File name:" + fileName);
                 if(line.equals("")) {
                     i("line is empty");
                     i("######### break ##############");
@@ -151,7 +164,7 @@ public class Selenium {
                     i(currentLineIndex + ". " + line);
                     try {
                         fileWriter = new FileWriter(testParams.metadata, true);
-                        fileWriter.append(line + " " + currentLineIndex + ".html\n");
+                        fileWriter.append(line + " " + fileName + ".html\n");
                         fileWriter.close();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -161,7 +174,7 @@ public class Selenium {
                     clickedItems.add(line);
                     if (child.isDisplayed()) {
                         child.click();
-                        if(!openDetails((currentLineIndex - 1) + ".html")) {
+                        if(!openDetails(fileName + ".html")) {
                             try {
                                 fileWriter = new FileWriter(testParams.folder.getAbsolutePath() + "/ERROR.html", true);
                                 fileWriter.append(driver.getPageSource());
@@ -182,11 +195,15 @@ public class Selenium {
 
     private static boolean processingDialog() {
         timeouts.pageLoadTimeout(testParams.defaultTimeout, TimeUnit.MILLISECONDS);
-        WebElement webElement = driver.findElement(By.id("d1::msgDlg::cancel"));
-        if(webElement != null && webElement.isDisplayed()) {
-            i("Click on OK");
-            webElement.click();
-            return true;
+        try {
+            WebElement webElement = driver.findElement(By.id("d1::msgDlg::cancel"));
+            if (webElement != null && webElement.isDisplayed()) {
+                i("Click on OK");
+                webElement.click();
+                return true;
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
         i("Cannot find dialog");
         return false;
