@@ -1,7 +1,9 @@
 package it.giustizia.amministrativa.parser.addons;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -11,6 +13,14 @@ import java.util.List;
  * Created by avsupport on 2/11/15.
  */
 public class FirefoxDriverAddon extends FirefoxDriver {
+
+//    public FirefoxDriverAddon (boolean isEnableJs) {
+//        super(isEnableJs);
+//    }
+//
+//    public FirefoxDriverAddon (BrowserVersion browserVersion) {
+//        super(browserVersion);
+//    }
 
 
     public boolean isElementPresent(By by)
@@ -27,10 +37,10 @@ public class FirefoxDriverAddon extends FirefoxDriver {
         return present;
     }
 
-    public WebElement findDynamicElement(By by, long timeOut) {
+    public WebElement findDynamicElement(By by, long timeOutMs) {
         long startTime = System.currentTimeMillis();
         while (true) {
-            if (System.currentTimeMillis() - startTime > timeOut) return null;
+            if (System.currentTimeMillis() - startTime > timeOutMs) return null;
             if(isElementPresent(by)) {
                 return findElement(by);
             }

@@ -22,11 +22,13 @@ public class Constants {
 
         public static final String CONSIGLIO_DI_STATTO = "//*[@id=\"navigation_dx\"]/ul/li[1]/a/span";
         public static final String ATTIVITA_GIURISDIZIONALE = "//*[@id=\"content\"]/div[2]/p[2]/a";
+        public static final String SCROLLER = "//*[@id=\"t1::scroller\"]";
     }
 
     public static class ClassName {
         public static final String ROW = "x10m";
         public static final String CELL = "x10j";
+        public static final String SELECTED_ROW = "p_AFSelected";
     }
 
     public static class Type{
