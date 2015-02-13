@@ -12,7 +12,7 @@ import static it.giustizia.amministrativa.parser.utils.LoggerUtil.i;
  */
 public class TestParams {
 
-    public long defaultTimeout = 30000;
+    public long defaultTimeout = 90000;
     public String metadataFileName = "metadata.txt";
     public File metadata = null;
     public File folder = null;
@@ -107,7 +107,7 @@ public class TestParams {
                     "(optional) -e dateFrom stringValue, Default value is \"12/01/2014\"\n" +
                     "(optional) -e dateTo stringValue, Default value is \"2/9/2015\"\n" +
                     "(optional) -e type stringValue, value of \"type\" key should be \"tar\" or \"cds\". Default value is \"tar\"\n" +
-                    "(optional) -e timeout longValue, Default value is \"30000\" ms\n" +
+                    "(optional) -e timeout longValue, Default value is \"90000\" ms\n" +
                     "(optional) -e province stringValue, you can call that key many times\n" +
                     "(optional) -e isCreateNewResultsFolder booleanValue - If you need to crete new results folder for each test launching then put true. Default params is false" +
                     "Default value is true.\n\n" +

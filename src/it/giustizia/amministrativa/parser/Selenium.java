@@ -64,9 +64,9 @@ public class Selenium {
             timeouts.pageLoadTimeout(testParams.defaultTimeout, TimeUnit.MILLISECONDS);
         }
 
-        i("province name = " + provinceName);
-
         checkFolders(getFolderName(provinceName == null ? "cds" : provinceName));
+
+        i("province id = " + provinceName);
 
         webElement = driver.findDynamicElement(By.xpath(Constants.Xpath.PROVVEDIMENTI), 1, testParams.defaultTimeout);
 
