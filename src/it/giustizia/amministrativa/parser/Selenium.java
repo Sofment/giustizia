@@ -5,7 +5,6 @@ import it.giustizia.amministrativa.parser.constants.Constants;
 import it.giustizia.amministrativa.parser.utils.TestParams;
 import org.openqa.selenium.*;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,11 @@ public class Selenium {
     private static FirefoxDriverAddon driver;
     private static WebDriver.Timeouts timeouts;
     private static TestParams testParams;
+    private static String provinceId = "";
+
+    private static int unucalIemCount = 0;
+
+    private static ArrayList<String> unicalItems = new ArrayList<String>();
 
     public static void main(String[] args) {
         testParams = new TestParams(args);
@@ -64,9 +68,9 @@ public class Selenium {
             timeouts.pageLoadTimeout(testParams.defaultTimeout, TimeUnit.MILLISECONDS);
         }
 
-        checkFolders(provinceName = getFolderName(provinceName == null ? "cds" : provinceName));
+        checkFolders(provinceId = getFolderName(provinceName == null ? "cds" : provinceName));
 
-        i("province id = " + provinceName);
+        i("province id = " + provinceId);
 
         webElement = driver.findDynamicElement(By.xpath(Constants.Xpath.PROVVEDIMENTI), 1, testParams.defaultTimeout);
 
@@ -161,10 +165,15 @@ public class Selenium {
 
             if(compareIndex > 3) isContinue = false;
 
+            if(!unicalItems.contains(line)) {
+                unicalItems.add(line);
+                unucalIemCount ++;
+            }
+
             if(!(new File(testParams.folder.getAbsolutePath() + "/" + fileName + ".html").exists())) {
                 if(!line.trim().equals("") && !clickedItems.contains(line)) {
-                    i("File name:" + fileName);
-                    i(currentLineIndex + ". " + line);
+                    i(provinceId + ": " + unucalIemCount + ". File name:" + fileName + ".html");
+                    i(provinceId + ": " + unucalIemCount + ". " + line);
                     driver.addDataToFile(testParams.metadata, line + " " + fileName + ".html\n");
                     currentLineIndex ++;
                     clickedItems.add(line);
@@ -174,7 +183,7 @@ public class Selenium {
                     }
                 }
             } else {
-                i("file: \"" + fileName + ".html\" already exists.");
+                i(provinceId + ": " + unucalIemCount + ". file: \"" + fileName + ".html\" already exists.");
             }
             selectedRow = driver.findDynamicElement(By.className(Constants.ClassName.SELECTED_ROW), testParams.defaultTimeout);
             if(selectedRow != null) selectedRow.click();
@@ -194,7 +203,9 @@ public class Selenium {
                 webElement.click();
                 return true;
             }
-        }catch (Exception ex){
+        } catch (NoSuchElementException ex){
+            ex.printStackTrace();
+        } catch (Exception ex){
             ex.printStackTrace();
         }
         i("Cannot find dialog");
