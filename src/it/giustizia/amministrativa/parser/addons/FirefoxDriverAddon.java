@@ -10,6 +10,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import static it.giustizia.amministrativa.parser.utils.LoggerUtil.i;
+
 /**
  * Created by avsupport on 2/11/15.
  */
@@ -103,7 +105,12 @@ public class FirefoxDriverAddon extends FirefoxDriver {
     }
 
     public void doDumpOfPage(String pathToFile) {
-        addDataToFile(pathToFile, getPageSource());
+        try {
+            addDataToFile(pathToFile, getPageSource());
+        } catch (UnhandledAlertException unhandledAlertException) {
+            i("can not do dump of page");
+            unhandledAlertException.printStackTrace();
+        }
     }
 
     public void addDataToFile(File file, String data) {
