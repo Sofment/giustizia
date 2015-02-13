@@ -75,6 +75,9 @@ public class Selenium {
 
         timeouts.pageLoadTimeout(testParams.defaultTimeout, TimeUnit.MILLISECONDS);
 
+        i("Date from: " + testParams.dateFrom);
+        i("Date to: " + testParams.dateTo);
+
         if(!driver.inputText(By.xpath(Constants.Xpath.EDIT_TEXT_FROM), testParams.dateFrom, testParams.defaultTimeout)) return;
         if(!driver.inputText(By.xpath(Constants.Xpath.EDIT_TEXT_TO), testParams.dateTo, testParams.defaultTimeout)) return;
 
@@ -170,6 +173,8 @@ public class Selenium {
                         processingDialog();
                     }
                 }
+            } else {
+                i("file: \"" + fileName + ".html\" already exists.");
             }
             selectedRow = driver.findDynamicElement(By.className(Constants.ClassName.SELECTED_ROW), testParams.defaultTimeout);
             if(selectedRow != null) selectedRow.click();
