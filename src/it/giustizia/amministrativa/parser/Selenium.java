@@ -124,7 +124,7 @@ public class Selenium {
 
     private static void processedAllItems() {
         boolean isContinue = true;
-        int currentLineIndex = 1;
+//        int currentLineIndex = 1;
 
         String prevLine = "";
         int compareIndex = 0;
@@ -171,17 +171,18 @@ public class Selenium {
             }
 
             if(!(new File(testParams.folder.getAbsolutePath() + "/" + fileName + ".html").exists())) {
-                if(!line.trim().equals("") && !clickedItems.contains(line)) {
-                    i(provinceId + ": " + unucalIemCount + ". File name:" + fileName + ".html");
-                    i(provinceId + ": " + unucalIemCount + ". " + line);
-                    driver.addDataToFile(testParams.metadata, line + " " + fileName + ".html\n");
-                    currentLineIndex ++;
+//                if(!line.trim().equals("") && !clickedItems.contains(line)) {
+//                    currentLineIndex ++;
                     clickedItems.add(line);
                     if (!openDetails(fileName + ".html")) {
                         driver.doDumpOfPage(testParams.folder.getAbsolutePath() + "/ERROR-" + fileName + ".html");
                         processingDialog();
+                    } else {
+                        i(provinceId + ": " + unucalIemCount + ". File name:" + fileName + ".html");
+                        i(provinceId + ": " + unucalIemCount + ". " + line);
+                        driver.addDataToFile(testParams.metadata, line + " " + fileName + ".html\n");
                     }
-                }
+//                }
             } else {
                 i(provinceId + ": " + unucalIemCount + ". file: \"" + fileName + ".html\" already exists.");
             }
