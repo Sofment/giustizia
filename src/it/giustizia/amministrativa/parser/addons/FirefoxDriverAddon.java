@@ -30,8 +30,9 @@ public class FirefoxDriverAddon extends FirefoxDriver {
         {
             findElement(by);
             present = true;
-        }catch (NoSuchElementException e)
-        {
+        } catch (NoSuchElementException e) {
+            present = false;
+        } catch (UnhandledAlertException e) {
             present = false;
         }
         return present;
@@ -77,10 +78,14 @@ public class FirefoxDriverAddon extends FirefoxDriver {
     }
 
     public boolean clickOnElementBy(By by, long timeoutMs) {
-        WebElement webElement = findDynamicElement(by, timeoutMs);
-        if(webElement != null && webElement.isDisplayed()) {
-            webElement.click();
-            return true;
+        try {
+            WebElement webElement = findDynamicElement(by, timeoutMs);
+            if (webElement != null && webElement.isDisplayed()) {
+                webElement.click();
+                return true;
+            }
+        } catch (TimeoutException timeoutException) {
+            return false;
         }
         return false;
     }

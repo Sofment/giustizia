@@ -102,7 +102,9 @@ public class Selenium {
     }
 
     private static void checkFolders(String name) {
-        testParams.folder = new File("Reports-" + System.currentTimeMillis() + "/" + name);
+        testParams.folder = testParams.isCreateNewResultsFolder ?
+                new File("Reports-" + System.currentTimeMillis() + "/" + name) :
+                new File("Reports" + "/" + name);
         if(!testParams.folder.exists()) testParams.folder.mkdirs();
         testParams.metadata = new File(testParams.folder.getAbsolutePath() + "/" + testParams.metadataFileName);
         if(!testParams.metadata.exists()) try {
@@ -142,7 +144,6 @@ public class Selenium {
                 }
                 line = line + currentCell.getText() + "\t";
             }
-            i("File name:" + fileName);
 
             if(line.equals(prevLine)) {
                 compareIndex ++;
@@ -155,6 +156,8 @@ public class Selenium {
             if(compareIndex > 3) isContinue = false;
 
             if(!line.trim().equals("") && !clickedItems.contains(line)) {
+
+            i("File name:" + fileName);
                 i(currentLineIndex + ". " + line);
                 try {
                     fileWriter = new FileWriter(testParams.metadata, true);
@@ -165,15 +168,17 @@ public class Selenium {
                 }
                 currentLineIndex ++;
                 clickedItems.add(line);
-                if(!openDetails(fileName + ".html")) {
-                    try {
-                        fileWriter = new FileWriter(testParams.folder.getAbsolutePath() + "/ERROR.html", true);
-                        fileWriter.append(driver.getPageSource());
-                        fileWriter.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                if(!(new File(fileName + ".html").exists())) {
+                    if (!openDetails(fileName + ".html")) {
+                        try {
+                            fileWriter = new FileWriter(testParams.folder.getAbsolutePath() + "/ERROR.html", true);
+                            fileWriter.append(driver.getPageSource());
+                            fileWriter.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        processingDialog();
                     }
-                    processingDialog();
                 }
             }
             selectedRow = driver.findDynamicElement(By.className(Constants.ClassName.SELECTED_ROW), testParams.defaultTimeout);

@@ -21,7 +21,7 @@ public class TestParams {
     public String type = "tar";
     public String dateFrom = "12/31/2014";
     public String dateTo = "2/9/2015";
-    public boolean isCreateNewResultsFolder = true;
+    public boolean isCreateNewResultsFolder = false;
     public ProvincesHashMap provincesHashMap = new ProvincesHashMap();
 
     public TestParams(String... args) {
@@ -109,7 +109,7 @@ public class TestParams {
                     "(optional) -e type stringValue, value of \"type\" key should be \"tar\" or \"cds\". Default value is \"tar\"\n" +
                     "(optional) -e timeout longValue, Default value is \"30000\" ms\n" +
                     "(optional) -e province stringValue, you can call that key many times\n" +
-                    "(optional) -e isCreateNewResultsFolder booleanValue - If you don't need to crete new results folder for each test launching then put true. " +
+                    "(optional) -e isCreateNewResultsFolder booleanValue - If you need to crete new results folder for each test launching then put true. Default params is false" +
                     "Default value is true.\n\n" +
                     "Available provinces:\n" +
                     provincesHashMap.getAllKeys());
@@ -143,7 +143,7 @@ public class TestParams {
             try {
                 isCreateNewResultsFolder = Boolean.parseBoolean(value);
             } catch (Exception ex) {
-                i(" arg \"isCreateNewResultsFolder\" could be boolean. \nIf you don't need to crete new results folder for each test launching then put true. \nDefault value is true.");
+                i(" arg \"isCreateNewResultsFolder\" could be boolean. \nIf you need to crete new results folder for each test launching then put true. \nDefault value is false");
                 System.exit(0);
             }
         }

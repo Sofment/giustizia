@@ -34,5 +34,6 @@ public class Constants {
     public static class Type{
         public static final String TAR = "tar";
         public static final String CDS = "cds";
+        public static final String ALL = "all";
     }
 }
