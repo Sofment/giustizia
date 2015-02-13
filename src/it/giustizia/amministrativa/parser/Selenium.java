@@ -158,18 +158,16 @@ public class Selenium {
 
             if(compareIndex > 3) isContinue = false;
 
-            if(!(new File(fileName).exists())) {
-                if (!line.trim().equals("") && !clickedItems.contains(line)) {
+            if(!(new File(testParams.folder.getAbsolutePath() + "/" + fileName + ".html").exists())) {
+                if(!line.trim().equals("") && !clickedItems.contains(line)) {
                     i("File name:" + fileName);
                     i(currentLineIndex + ". " + line);
                     driver.addDataToFile(testParams.metadata, line + " " + fileName + ".html\n");
-                    currentLineIndex++;
+                    currentLineIndex ++;
                     clickedItems.add(line);
-                    if (!(new File(fileName + ".html").exists())) {
-                        if (!openDetails(fileName + ".html")) {
-                            driver.doDumpOfPage(testParams.folder.getAbsolutePath() + "/ERROR-" + fileName + ".html");
-                            processingDialog();
-                        }
+                    if (!openDetails(fileName + ".html")) {
+                        driver.doDumpOfPage(testParams.folder.getAbsolutePath() + "/ERROR-" + fileName + ".html");
+                        processingDialog();
                     }
                 }
             }
