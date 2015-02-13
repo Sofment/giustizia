@@ -64,7 +64,7 @@ public class Selenium {
             timeouts.pageLoadTimeout(testParams.defaultTimeout, TimeUnit.MILLISECONDS);
         }
 
-        checkFolders(getFolderName(provinceName == null ? "cds" : provinceName));
+        checkFolders(provinceName = getFolderName(provinceName == null ? "cds" : provinceName));
 
         i("province id = " + provinceName);
 
