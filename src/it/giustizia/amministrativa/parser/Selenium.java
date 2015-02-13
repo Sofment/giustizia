@@ -137,7 +137,7 @@ public class Selenium {
             selectedRow = driver.findDynamicElement(By.className(Constants.ClassName.SELECTED_ROW), testParams.defaultTimeout);
 
             if(selectedRow == null) {
-                driver.doDumpOfPage("Error_" + fileName + ".html");
+//                driver.doDumpOfPage("Error_" + fileName + ".html");
                 break;
             }
 
@@ -174,10 +174,10 @@ public class Selenium {
 //                if(!line.trim().equals("") && !clickedItems.contains(line)) {
 //                    currentLineIndex ++;
                     clickedItems.add(line);
-                    if (!openDetails(fileName + ".html")) {
-                        driver.doDumpOfPage(testParams.folder.getAbsolutePath() + "/ERROR-" + fileName + ".html");
-                        processingDialog();
-                    } else {
+                    if (openDetails(fileName + ".html")) {
+//                        driver.doDumpOfPage(testParams.folder.getAbsolutePath() + "/ERROR-" + fileName + ".html");
+//                        processingDialog();
+//                    } else {
                         i(provinceId + ": " + unucalIemCount + ". File name:" + fileName + ".html");
                         i(provinceId + ": " + unucalIemCount + ". " + line);
                         driver.addDataToFile(testParams.metadata, line + " " + fileName + ".html\n");
@@ -209,16 +209,15 @@ public class Selenium {
         } catch (Exception ex){
             ex.printStackTrace();
         }
-        i("Cannot find dialog");
         return false;
     }
 
     private static boolean openDetails(String fileName) {
         if(!driver.clickOnElementBy(By.xpath(Constants.Xpath.BUTTON_VISUALIZZA), testParams.defaultTimeout)) return true;
 
-        if(!driver.waitForNumberOfWindowsToEqual(2, driver, testParams.defaultTimeout * 2)) {
-            return false;
-        }
+        if(!waitForNewWindow(testParams.defaultTimeout * 2)) return false;
+
+
         String winHandleBefore = driver.getWindowHandle();
 
         Set<String> windowsHelpers = driver.getWindowHandles();
@@ -233,6 +232,20 @@ public class Selenium {
         driver.switchTo().window(winHandleBefore);
         timeouts.pageLoadTimeout(testParams.defaultTimeout, TimeUnit.MILLISECONDS);
         return true;
+    }
+
+    private static boolean waitForNewWindow(long timeoutMs) {
+        long startTime = System.currentTimeMillis();
+
+        while (true) {
+            if(System.currentTimeMillis() - startTime > timeoutMs) return false;
+
+            if(driver.waitForNumberOfWindowsToEqual(2, driver, 1000)) {
+                return true;
+            }
+
+            if(processingDialog()) return false;
+        }
     }
 }
 
