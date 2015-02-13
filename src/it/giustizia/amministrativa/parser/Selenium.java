@@ -1,6 +1,5 @@
 package it.giustizia.amministrativa.parser;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import it.giustizia.amministrativa.parser.addons.FirefoxDriverAddon;
 import it.giustizia.amministrativa.parser.constants.Constants;
 import it.giustizia.amministrativa.parser.utils.TestParams;
@@ -119,7 +118,6 @@ public class Selenium {
     private static void processedAllItems() {
         boolean isContinue = true;
         int currentLineIndex = 1;
-        FileWriter fileWriter;
 
         String prevLine = "";
         int compareIndex = 0;
@@ -127,12 +125,17 @@ public class Selenium {
         WebElement selectedRow = null;
         WebElement scroller = null;
 
+        String fileName = "";
         while (isContinue) {
-
             selectedRow = driver.findDynamicElement(By.className(Constants.ClassName.SELECTED_ROW), testParams.defaultTimeout);
+
+            if(selectedRow == null) {
+                driver.doDumpOfPage("Error_" + fileName + ".html");
+                break;
+            }
+
             List<WebElement> cells = selectedRow.findElements(By.className(Constants.ClassName.CELL));
-            String line = "";
-            String fileName = "";
+            String line = fileName = "";
             for (int i = 0; i < cells.size(); i++) {
                 WebElement currentCell = cells.get(i);
                 if (i == 0 || i == 1 || i == 5) {
@@ -156,27 +159,14 @@ public class Selenium {
             if(compareIndex > 3) isContinue = false;
 
             if(!line.trim().equals("") && !clickedItems.contains(line)) {
-
-            i("File name:" + fileName);
+                i("File name:" + fileName);
                 i(currentLineIndex + ". " + line);
-                try {
-                    fileWriter = new FileWriter(testParams.metadata, true);
-                    fileWriter.append(line + " " + fileName + ".html\n");
-                    fileWriter.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                driver.addDataToFile(testParams.metadata, line + " " + fileName + ".html\n");
                 currentLineIndex ++;
                 clickedItems.add(line);
                 if(!(new File(fileName + ".html").exists())) {
                     if (!openDetails(fileName + ".html")) {
-                        try {
-                            fileWriter = new FileWriter(testParams.folder.getAbsolutePath() + "/ERROR.html", true);
-                            fileWriter.append(driver.getPageSource());
-                            fileWriter.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        driver.doDumpOfPage(testParams.folder.getAbsolutePath() + "/ERROR-" + fileName + ".html");
                         processingDialog();
                     }
                 }
@@ -219,14 +209,7 @@ public class Selenium {
         driver.switchTo().window(windowsHelpers.toArray()[1].toString());
         timeouts.pageLoadTimeout(testParams.defaultTimeout, TimeUnit.MILLISECONDS);
 
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(testParams.folder.getAbsolutePath() + "/" + fileName, true);
-            fileWriter.append(driver.getPageSource());
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        driver.doDumpOfPage(testParams.folder.getAbsolutePath() + "/" + fileName);
 
         driver.close();
 

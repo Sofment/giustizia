@@ -19,7 +19,7 @@ public class TestParams {
     public ArrayList<String> listOfArgs = new ArrayList<String>();
     public ArrayList<String> provinces = new ArrayList<String>();
     public String type = "tar";
-    public String dateFrom = "12/31/2014";
+    public String dateFrom = "12/01/2014";
     public String dateTo = "2/9/2015";
     public boolean isCreateNewResultsFolder = false;
     public ProvincesHashMap provincesHashMap = new ProvincesHashMap();
@@ -104,7 +104,7 @@ public class TestParams {
         if(args.length > 0 && args[0].equalsIgnoreCase("help")) {
             i("\n" +
                     "Usage: \n" +
-                    "(optional) -e dateFrom stringValue, Default value is \"12/31/2014\"\n" +
+                    "(optional) -e dateFrom stringValue, Default value is \"12/01/2014\"\n" +
                     "(optional) -e dateTo stringValue, Default value is \"2/9/2015\"\n" +
                     "(optional) -e type stringValue, value of \"type\" key should be \"tar\" or \"cds\". Default value is \"tar\"\n" +
                     "(optional) -e timeout longValue, Default value is \"30000\" ms\n" +

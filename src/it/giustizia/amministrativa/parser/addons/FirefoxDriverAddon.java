@@ -1,27 +1,19 @@
 package it.giustizia.amministrativa.parser.addons;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 /**
  * Created by avsupport on 2/11/15.
  */
 public class FirefoxDriverAddon extends FirefoxDriver {
-
-//    public FirefoxDriverAddon (boolean isEnableJs) {
-//        super(isEnableJs);
-//    }
-//
-//    public FirefoxDriverAddon (BrowserVersion browserVersion) {
-//        super(browserVersion);
-//    }
-
 
     public boolean isElementPresent(By by)
     {
@@ -30,9 +22,8 @@ public class FirefoxDriverAddon extends FirefoxDriver {
         {
             findElement(by);
             present = true;
-        } catch (NoSuchElementException e) {
-            present = false;
-        } catch (UnhandledAlertException e) {
+        }catch (NoSuchElementException e)
+        {
             present = false;
         }
         return present;
@@ -62,6 +53,19 @@ public class FirefoxDriverAddon extends FirefoxDriver {
         }
     }
 
+    public boolean clickOnElementBy(By by, long timeoutMs) {
+        try {
+            WebElement webElement = findDynamicElement(by, timeoutMs);
+            if (webElement != null && webElement.isDisplayed()) {
+                webElement.click();
+                return true;
+            }
+        } catch (TimeoutException timeoutException) {
+            return false;
+        }
+        return false;
+    }
+
     public boolean waitForNumberOfWindowsToEqual(final int numberOfWindows, WebDriver driver, long timeoutMs) {
         try {
             new WebDriverWait(driver, (timeoutMs / 1000)) {
@@ -77,19 +81,6 @@ public class FirefoxDriverAddon extends FirefoxDriver {
         return true;
     }
 
-    public boolean clickOnElementBy(By by, long timeoutMs) {
-        try {
-            WebElement webElement = findDynamicElement(by, timeoutMs);
-            if (webElement != null && webElement.isDisplayed()) {
-                webElement.click();
-                return true;
-            }
-        } catch (TimeoutException timeoutException) {
-            return false;
-        }
-        return false;
-    }
-
     public boolean inputText(By by, String text, long timeoutMs) {
         WebElement webElement = findDynamicElement(by, timeoutMs);
         if(webElement != null) {
@@ -103,6 +94,28 @@ public class FirefoxDriverAddon extends FirefoxDriver {
         try {
             Thread.sleep(timeoutMs);
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void doDumpOfPage(File file) {
+        doDumpOfPage(file.getAbsoluteFile());
+    }
+
+    public void doDumpOfPage(String pathToFile) {
+        addDataToFile(pathToFile, getPageSource());
+    }
+
+    public void addDataToFile(File file, String data) {
+        addDataToFile(file.getAbsolutePath(), data);
+    }
+
+    public void addDataToFile(String pathToFile, String data) {
+        try {
+            FileWriter fileWriter = new FileWriter(pathToFile, true);
+            fileWriter.append(data);
+            fileWriter.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
