@@ -43,6 +43,8 @@ public class Selenium {
             for(String provinceName : testParams.provinces) {
                 i("PROVINCE: " + provinceName);
                 unucalIemCount = 0;
+                unicalItems.clear();
+                clickedItems.clear();
                 start(provinceName);
             }
         } else {
