@@ -42,9 +42,11 @@ public class Selenium {
             }
             for(String provinceName : testParams.provinces) {
                 i("PROVINCE: " + provinceName);
+                unucalIemCount = 0;
                 start(provinceName);
             }
         } else {
+            unucalIemCount = 0;
             start(null);
         }
 
@@ -171,7 +173,7 @@ public class Selenium {
             }
 
             if(!(new File(testParams.folder.getAbsolutePath() + "/" + fileName + ".html").exists())) {
-//                if(!line.trim().equals("") && !clickedItems.contains(line)) {
+                if(!line.trim().equals("") && !clickedItems.contains(line)) {
 //                    currentLineIndex ++;
                     clickedItems.add(line);
                     if (openDetails(fileName + ".html")) {
@@ -182,7 +184,7 @@ public class Selenium {
                         i(provinceId + ": " + unucalIemCount + ". " + line);
                         driver.addDataToFile(testParams.metadata, line + " " + fileName + ".html\n");
                     }
-//                }
+                }
             } else {
                 i(provinceId + ": " + unucalIemCount + ". file: \"" + fileName + ".html\" already exists.");
             }
